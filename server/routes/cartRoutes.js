@@ -54,18 +54,16 @@ router.get("/", auth, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const result = await sql.query`
-      SELECT p.*, ci.Quantity
-      FROM Cart c
-      JOIN CartItems ci ON c.Id = ci.CartId
-      JOIN Products p ON p.Id = ci.ProductId
-      WHERE c.UserId = ${userId}
-    `;
+    const result = await pool.query(`
+      SELECT p.*, ci.quantity
+      FROM cart c
+      JOIN cartitems ci ON c.id = ci.cartid
+      JOIN products p ON p.id = ci.productid
+      WHERE c.userid = $1
+    `, [userId]);
 
-    res.json(result.recordset);
-
+    res.json(result.rows);
   } catch (err) {
-    console.log(err);
     res.status(500).send(err.message);
   }
 });
