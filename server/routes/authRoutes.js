@@ -1,33 +1,36 @@
 const router = require("express").Router();
-const { sql } = require("../config/db");
+const { poolPromise, sql } = require("../config/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// dangky
+// REGISTER
 router.post("/register", async (req, res) => {
   try {
     console.log("BODY:", req.body);
+    const { username, password } = req.body;
 
-    const { Username, Password } = req.body;
-
-    if (!Username || !Password) {
+    if (!username || !password) {
       return res.status(400).send("Thiếu thông tin");
     }
 
-    const check = await sql.query`
-      SELECT * FROM Users WHERE Username = ${Username}
-    `;
+    const pool = await poolPromise;
 
-    if (check.recordset.length > 0) {
+    // check username
+    const checkResult = await pool.request()
+      .input("username", sql.NVarChar, username)
+      .query("SELECT * FROM Users WHERE Username = @username");
+
+    if (checkResult.recordset.length > 0) {
       return res.status(400).send("Username đã tồn tại");
     }
 
-    const hash = await bcrypt.hash(Password, 10);
+    const hash = await bcrypt.hash(password, 10);
 
-    await sql.query`
-      INSERT INTO Users (Username, Password, Role)
-      VALUES (${Username}, ${hash}, 'user')
-    `;
+    await pool.request()
+      .input("username", sql.NVarChar, username)
+      .input("password", sql.NVarChar, hash)
+      .input("role", sql.NVarChar, "user")
+      .query("INSERT INTO Users (Username, Password, Role) VALUES (@username, @password, @role)");
 
     res.send("Register success");
 
@@ -37,11 +40,10 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// dangnhap
+// LOGIN
 router.post("/login", async (req, res) => {
   try {
     console.log("BODY:", req.body);
-
     const username = req.body.username?.trim();
     const password = req.body.password;
 
@@ -49,17 +51,18 @@ router.post("/login", async (req, res) => {
       return res.status(400).send("Thiếu thông tin");
     }
 
-    const result = await sql.query`
-      SELECT * FROM Users WHERE Username = ${username}
-    `;
+    const pool = await poolPromise;
+
+    const result = await pool.request()
+      .input("username", sql.NVarChar, username)
+      .query("SELECT * FROM Users WHERE Username = @username");
 
     const user = result.recordset[0];
 
-    if (!user) return res.status(400).send("Nguoi dung khong ton tai");
+    if (!user) return res.status(400).send("Người dùng không tồn tại");
 
     const match = await bcrypt.compare(password, user.Password);
-
-    if (!match) return res.status(400).send("Sai mat khau");
+    if (!match) return res.status(400).send("Sai mật khẩu");
 
     const token = jwt.sign(
       { id: user.Id, role: user.Role },

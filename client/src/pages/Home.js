@@ -10,14 +10,17 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    API.get("/products")
-      .then(res => {
-        const data = Array.isArray(res.data) ? res.data : [];
-        setProducts(data);
-        setFiltered(data);
-      })
-      .catch(err => console.log(err));
-  }, []);
+  API.get("/products")
+    .then(res => {
+      console.log("API DATA:", res.data); // debug
+
+      const data = res.data.recordset || res.data;
+
+      setProducts(data);
+      setFiltered(data);
+    })
+    .catch(err => console.log(err));
+}, []);
 
   const handleSearch = (keyword) => {
     const result = products.filter(p =>
