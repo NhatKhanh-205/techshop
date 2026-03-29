@@ -3,6 +3,7 @@ import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import "../layout/Admin.css";
+import { showError,showConfirm, showSuccess } from "../utils/alert";
 
 function AdminPage() {
   const [products, setProducts] = useState([]);
@@ -34,7 +35,7 @@ function AdminPage() {
       if (decoded.role === "admin") {
         setIsAdmin(true);
       } else {
-        alert("Bạn không phải admin");
+        showConfirm("Bạn không phải admin");
         navigate("/");
       }
     } catch (err) {
@@ -71,10 +72,10 @@ function AdminPage() {
     try {
       if (editingId) {
         await API.put(`/products/${editingId}`, form);
-        alert("Cập nhật thành công");
+        showSuccess("Cập nhật thành công");
       } else {
         await API.post("/products", form);
-        alert("Thêm thành công");
+        showSuccess("Thêm thành công");
       }
 
       setForm({ name: "", price: "", image: "", describe: "" });
@@ -89,11 +90,11 @@ function AdminPage() {
       console.log("API ERROR:", err.response?.data || err.message);
 
       if (err.response?.status === 401) {
-        alert("Chưa đăng nhập");
+        showError("Chưa đăng nhập");
       } else if (err.response?.status === 403) {
-        alert("Bạn không có quyền admin");
+        showError("Bạn không có quyền admin");
       } else {
-        alert("Lỗi server");
+        showError("Lỗi server");
       }
     }
   };
@@ -113,7 +114,7 @@ function AdminPage() {
 
     try {
       await API.delete(`/products/${id}`);
-      alert("Đã xóa");
+      showSuccess("Đã xóa");
 
       const res = await API.get("/products");
       const data = res.data.recordset || res.data;
@@ -121,7 +122,7 @@ function AdminPage() {
 
     } catch (err) {
       console.log("DELETE ERROR:", err.response?.data || err.message);
-      alert("Không có quyền hoặc lỗi server");
+      showError("Không có quyền hoặc lỗi server");
     }
   };
 

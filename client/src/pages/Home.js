@@ -3,6 +3,7 @@ import API from "../services/api";
 import "../layout/Home.css";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/Searchbar";
+import { showError, showSuccess } from "../utils/alert";
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -44,10 +45,11 @@ function Home() {
       productId: product.Id || product.id
     });
 
-    alert("Đã thêm vào giỏ");
+    showSuccess("Đã thêm vào giỏ");
 
   } catch (err) {
     console.log("ERROR:", err);
+    showError("Lỗi khi thêm vào giỏ");
   }
 };
 

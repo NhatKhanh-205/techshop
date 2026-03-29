@@ -13,7 +13,7 @@ const config = {
   }
 };
 
-// tạo pool (connection pooling)
+
 const poolPromise = new sql.ConnectionPool(config)
   .connect()
   .then(pool => {

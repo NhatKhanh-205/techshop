@@ -3,6 +3,9 @@ import API from "../services/api";
 import "../layout/Login.css";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { showError } from "../utils/alert";
+
+
 
 function Login() {
     const [username, setUsername] = useState("");
@@ -32,7 +35,7 @@ function Login() {
             }
 
         } catch (err) {
-            alert("Sai tài khoản hoặc mật khẩu");
+            showError("Sai tài khoản hoặc mật khẩu");
         }
     };
 
@@ -53,6 +56,18 @@ function Login() {
                 />
 
                 <button onClick={handleLogin}>Đăng nhập</button>
+                <p className="auth-switch">
+                    Chưa có tài khoản?{" "}
+                    <span onClick={() => navigate("/register")}>
+                        Đăng ký
+                    </span>
+                </p>
+                <p className="auth-switch">
+                    Quên mật khẩu?{" "}
+                    <span onClick={() => navigate("/forgot-password")}>
+                        Đặt lại mật khẩu
+                    </span>
+                </p>
 
             </div>
         </div>

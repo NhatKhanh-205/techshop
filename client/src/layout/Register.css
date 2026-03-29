@@ -1,57 +1,55 @@
-/* Login.css */
+/* Register.css */
 
-/* Wrapper full màn hình */
-.login-wrapper {
+.auth-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   background: #f5f7fa;
-  padding: 16px; /* 👉 tránh dính sát viền mobile */
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 16px; /* 👉 thêm để mobile không dính sát mép */
 }
 
-/* Container */
-.login-container {
-  width: 100%;
-  max-width: 400px;
+.auth-container {
   background: #fff;
   padding: 40px 30px;
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
 }
 
 /* Title */
-.login-container h1 {
-  text-align: center;
-  margin-bottom: 10px;
+.auth-title {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #222;
 }
 
 /* Input */
-.login-container input {
+.auth-container input {
   width: 100%;
   padding: 12px 15px;
+  margin: 10px 0;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 15px;
   transition: all 0.3s ease;
 }
 
-.login-container input:focus {
+.auth-container input:focus {
   border-color: #e57373;
   outline: none;
   box-shadow: 0 0 6px rgba(229, 115, 115, 0.3);
 }
 
 /* Button */
-.login-container button {
+.auth-container button {
   width: 100%;
   padding: 12px;
-  margin-top: 10px;
+  margin-top: 15px;
   background: #ff4d4f;
   border: none;
   border-radius: 8px;
@@ -59,21 +57,18 @@
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, opacity 0.3s ease, background 0.3s ease;
 }
 
-.login-container button:hover {
-  background: #d9363e;
+.auth-container button:hover {
   transform: translateY(-2px);
-}
-
-.login-container button:active {
-  transform: scale(0.98);
+  opacity: 0.9;
+  background: #d9363e;
 }
 
 /* Switch link */
 .auth-switch {
-  text-align: center;
+  margin-top: 20px;
   font-size: 14px;
   color: #555;
 }
@@ -82,6 +77,7 @@
   color: #e57373;
   font-weight: bold;
   cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .auth-switch span:hover {
@@ -90,21 +86,22 @@
 
 /* ================= MOBILE ================= */
 @media (max-width: 480px) {
-  .login-container {
-    padding: 20px 16px;
+  .auth-container {
+    padding: 20px 16px; /* 👉 giảm padding */
     border-radius: 10px;
   }
 
-  .login-container h1 {
+  .auth-title {
     font-size: 22px;
+    margin-bottom: 18px;
   }
 
-  .login-container input {
+  .auth-container input {
     padding: 10px;
     font-size: 14px;
   }
 
-  .login-container button {
+  .auth-container button {
     padding: 10px;
     font-size: 14px;
   }

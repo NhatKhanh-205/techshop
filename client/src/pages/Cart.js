@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import "../layout/Cart.css";
+import { showError, showSuccess } from "../utils/alert";
 
 
 function Cart() {
@@ -12,7 +13,7 @@ function Cart() {
     try {
       await API.delete(`/cart/remove/${productId}`);
 
-      alert("Đã xoá");
+      showSuccess("Đã xoá");
 
       // reload lại cart
       const res = await API.get("/cart");
@@ -20,7 +21,7 @@ function Cart() {
 
     } catch (err) {
       console.log(err);
-      alert("Lỗi xoá");
+      showError("Lỗi xoá");
     }
   };
 
@@ -34,7 +35,7 @@ function Cart() {
         method: "COD" // hoặc "BANK"
       });
 
-      alert("Thanh toán thành công");
+      showSuccess("Thanh toán thành công");
 
       // tải file hóa đơn
       window.open(`http://localhost:5000/${res.data.invoice}`);
@@ -44,7 +45,7 @@ function Cart() {
 
     } catch (err) {
       console.log(err);
-      alert("Lỗi thanh toán");
+      showError("Lỗi thanh toán");
     }
   };
 
